@@ -99,13 +99,13 @@
                         </div>
                     </div>
 
-                    <!-- GO:COUNTER LOGO (MATCHING IMAGE STYLE) -->
+                    <!-- GO:COUNTER LOGO (ORIGINAL CLASSIC CS:GO STYLE) -->
                     <div class="pt-2 select-none">
-                        <h1 class="font-rajdhani font-black text-5xl sm:text-6xl tracking-widest text-amber-400 uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)]">
-                            GO:COUNTER
+                        <h1 class="font-rajdhani font-black text-5xl sm:text-6xl tracking-widest text-amber-400 uppercase drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] csgo-logo-glow">
+                            GO:<span class="text-white">COUNTER</span>
                         </h1>
                         <div class="text-[11px] font-bold tracking-[0.35em] text-slate-300 uppercase mt-1 drop-shadow">
-                            LEGACY 2016 CLIENT EDITION
+                            CLASSIC COUNTER EDITION 2016
                         </div>
                         <p class="text-xs text-slate-300 max-w-md mt-2 drop-shadow bg-slate-950/50 p-2.5 rounded-lg border border-slate-800/60 backdrop-blur-md">
                             Ultra-optimized client with legacy audio bank, RAM purge engine & silent inventory bridge.
@@ -119,16 +119,16 @@
                     <!-- USER PROFILE -->
                     <div class="flex items-center space-x-3">
                         <div class="relative">
-                            <img src="https://placehold.co/100x100/1e293b/74C044?text=LL" class="w-11 h-11 rounded-lg border border-slate-600 object-cover" alt="Avatar">
+                            <img src="https://placehold.co/100x100/1e293b/74C044?text=SQ" class="w-11 h-11 rounded-lg border border-slate-600 object-cover" alt="Avatar">
                             <span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#121318] rounded-full"></span>
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="font-bold text-slate-100 text-sm">Lukáš L.</span>
+                                <span class="font-bold text-slate-100 text-sm">Hello, SQ|SKROPE</span>
                                 <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-1.5 py-0.2 rounded font-mono">Whitelisted</span>
                             </div>
                             <span class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                                <i class="fa-solid fa-server text-[10px] text-[#74C044]"></i> Server connected
+                                <i class="fa-solid fa-server text-[10px] text-[#74C044]"></i> Server connected...
                             </span>
                         </div>
                     </div>
@@ -136,16 +136,19 @@
                     <!-- ACTION TOOLBAR & LAUNCH BUTTON -->
                     <div class="flex items-center space-x-2">
                         
-                        <!-- TOOLBAR BUTTONS -->
+                        <!-- TOOLBAR BUTTONS: (i), EDIT, SETTINGS, MENU -->
                         <div class="flex items-center bg-slate-900/90 rounded-lg p-1 border border-slate-700/60">
                             <button onclick="openInfoModal()" title="Information" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
-                                <i class="fa-solid fa-circle-info text-sm"></i>
+                                <i class="fa-solid fa-circle-info text-sm text-[#74C044]"></i>
                             </button>
-                            <button title="Server Browser" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
-                                <i class="fa-solid fa-list-ul text-sm"></i>
+                            <button onclick="showToast('Edit mode enabled')" title="Edit Options" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
+                                <i class="fa-solid fa-pen text-xs"></i>
                             </button>
                             <button onclick="openSettingsModal()" title="Settings" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
                                 <i class="fa-solid fa-gear text-sm"></i>
+                            </button>
+                            <button onclick="showToast('Opened Options Menu')" title="Menu List" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
+                                <i class="fa-solid fa-list-ul text-sm"></i>
                             </button>
                         </div>
 
@@ -265,13 +268,33 @@
                 </button>
             </div>
 
+            <div class="py-4 space-y-4 text-xs">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1">Launch Options (-novid -high -threads):</label>
+                    <input type="text" value="-novid -nojoy -high -threads 4" class="w-full bg-slate-900 border border-slate-700 rounded px-3 py-2 text-slate-200 font-mono text-xs focus:outline-none focus:border-[#74C044]">
+                </div>
+                <div class="pt-2 border-t border-slate-800 flex items-center justify-between">
+                    <span class="text-slate-300 font-semibold">Steam Integration</span>
+                    <button onclick="addToSteam()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 rounded text-xs flex items-center gap-1.5 transition">
+                        <i class="fa-brands fa-steam"></i> Add to Steam Non-Steam Game
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex justify-end space-x-2">
+                <button onclick="closeSettingsModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition">Cancel</button>
+                <button onclick="saveSettings()" class="px-4 py-1.5 btn-green text-slate-950 font-bold rounded text-xs transition">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
     <!-- INFORMATION MODAL -->
     <div id="infoModal" class="hidden fixed inset-0 modal-blur bg-black/75 z-50 flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#181922] border border-slate-700 rounded-xl shadow-2xl p-6 relative">
             
             <div class="flex justify-between items-center pb-3 border-b border-slate-800">
                 <h3 class="text-lg font-rajdhani font-bold text-white tracking-wide flex items-center gap-2">
-                    <i class="fa-solid fa-circle-info text-[#74C044]"></i> ABOUT GO:COUNTER
+                    <i class="fa-solid fa-circle-info text-[#74C044]"></i> GO:COUNTER - Launcher Information
                 </h3>
                 <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -290,7 +313,7 @@
                 <!-- OPTIMIZATION DETAILS -->
                 <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 text-slate-300 leading-relaxed text-[11px]">
                     <i class="fa-solid fa-bolt text-amber-400 mr-1"></i>
-                    Our launcher is fully optimized and tweaked to enhance game performance, boost FPS, and significantly accelerate loading times—specially tailored for older PCs with legacy GPUs and traditional HDD storage.
+                    Our launcher is heavily optimized and tweaked to boost game performance, ensure faster loading times, and provide smoother gameplay specifically tailored for legacy hardware, old PCs, HDDs, and older graphics cards.
                 </div>
 
                 <!-- CREDITS SECTION -->
@@ -301,11 +324,11 @@
                     
                     <div class="flex items-center justify-between text-slate-200 text-xs">
                         <span class="text-slate-400">Special Thanks:</span>
-                        <span class="font-semibold text-[#74C044]">Lukasss895 & AyoVajjo</span>
+                        <span class="font-semibold text-[#74C044]">Lukasss895, AyoVajjo</span>
                     </div>
 
                     <div class="flex items-center justify-between text-slate-200 text-xs">
-                        <span class="text-slate-400">Launcher Coder:</span>
+                        <span class="text-slate-400">Coded Launcher:</span>
                         <span class="font-semibold text-slate-100 font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700">Lukasss895</span>
                     </div>
 
