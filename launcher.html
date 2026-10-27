@@ -1,21 +1,684 @@
-[
-  {
-    "version": "v1.4.2",
-    "date": "27. 10. 2026",
-    "title": "Legacy Audio & Silent Bridge",
-    "changes": [
-      "Pridaný 2016 Legacy Sound Pack pre zbrane a prostredie",
-      "Drops Bridge plne skompilovaný bez potreby lokalného Pythonu",
-      "Zautomatizované čistenie RAM pamäte pre staršie PC"
-    ]
-  },
-  {
-    "version": "v1.4.0",
-    "date": "25. 10. 2026",
-    "title": "CS:GO Potato Engine Release",
-    "changes": [
-      "High priority zámok pre CPU jadrá",
-      "Automatické stláčanie Enteru pri štarte hry"
-    ]
-  }
-]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO:COUNTER Launcher</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0e1015;
+            --panel-bg: rgba(18, 22, 29, 0.85);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --accent-green: #83b82b;
+            --accent-green-hover: #98d632;
+            --text-main: #e2e8f0;
+            --text-muted: #8a99ad;
+            --modal-bg: #151a21;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Launcher Container */
+        .launcher-card {
+            width: 1000px;
+            height: 600px;
+            background-color: #0b0d12;
+            border-radius: 10px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 1px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Top Header */
+        .top-bar {
+            height: 45px;
+            background: rgba(11, 13, 18, 0.95);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--panel-border);
+            z-index: 10;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: 1px;
+        }
+
+        .brand-title span.yellow {
+            color: #f5ae00;
+        }
+
+        .badge-edition {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .win-btn {
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .win-btn:hover {
+            color: #fff;
+        }
+
+        /* Main Workspace */
+        .main-content {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Left Banner Section with Wallpaper */
+        .hero-banner {
+            flex: 1.6;
+            position: relative;
+            background: url('https://i.imgur.com/G5g2mJ4.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+        }
+
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(0deg, rgba(11, 13, 18, 0.9) 0%, rgba(11, 13, 18, 0.2) 50%, rgba(11, 13, 18, 0.4) 100%);
+            z-index: 1;
+        }
+
+        /* Bottom Control Panel */
+        .bottom-bar {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 18, 24, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-box {
+            width: 42px;
+            height: 42px;
+            background: #1e2633;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #f5ae00;
+            border: 1px solid rgba(245, 174, 0, 0.3);
+            position: relative;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            border: 2px solid #0f1218;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .username {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .user-status {
+            font-size: 11px;
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-whitelisted {
+            background: rgba(131, 184, 43, 0.15);
+            color: var(--accent-green);
+            font-size: 9px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            border: 1px solid rgba(131, 184, 43, 0.3);
+            margin-left: 6px;
+        }
+
+        /* Action Icon Group */
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        /* Combined Launch Button */
+        .launch-wrapper {
+            display: flex;
+            position: relative;
+        }
+
+        .btn-launch {
+            background: var(--accent-green);
+            color: #0d1403;
+            border: none;
+            padding: 0 24px;
+            height: 42px;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            font-weight: 800;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-launch:hover {
+            background: var(--accent-green-hover);
+        }
+
+        .btn-dropdown-toggle {
+            background: #73a324;
+            color: #0d1403;
+            border: none;
+            border-left: 1px solid rgba(0, 0, 0, 0.15);
+            width: 34px;
+            height: 42px;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .btn-dropdown-toggle:hover {
+            background: var(--accent-green-hover);
+        }
+
+        /* Dropdown Menu */
+        .launch-dropdown {
+            position: absolute;
+            bottom: 48px;
+            right: 0;
+            background: #171c24;
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            width: 180px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .launch-dropdown.active {
+            display: flex;
+        }
+
+        .dropdown-item {
+            padding: 10px 14px;
+            font-size: 12px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        /* Right Panel (Patch Notes Only) */
+        .sidebar-panel {
+            flex: 1;
+            background: rgba(15, 18, 24, 0.95);
+            border-left: 1px solid var(--panel-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header-title {
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+            border-bottom: 1px solid var(--panel-border);
+            background: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .panel-header-title i {
+            color: var(--accent-green);
+        }
+
+        .panel-body {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        /* Patch Notes Styling */
+        .patch-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .patch-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .patch-version {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .patch-date {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .patch-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .patch-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .patch-list li {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            position: relative;
+            padding-left: 12px;
+        }
+
+        .patch-list li::before {
+            content: "•";
+            color: var(--accent-green);
+            position: absolute;
+            left: 0;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--modal-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            width: 440px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-close {
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--panel-border);
+            border-radius: 5px;
+            padding: 10px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-green);
+        }
+
+        .btn-sec {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--panel-border);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-sec:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Credits Badges */
+        .credit-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #fff;
+            border: 1px solid var(--panel-border);
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .credit-badge span {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+<div class="launcher-card">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="brand-title">
+            <span>GO:<span class="yellow">COUNTER</span></span>
+            <span class="badge-edition">ULTIMATE EDITION</span>
+        </div>
+        <div class="top-controls">
+            <i class="fa-solid fa-minus win-btn"></i>
+            <i class="fa-solid fa-xmark win-btn"></i>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-content">
+        <!-- Banner Wallpaper -->
+        <div class="hero-banner">
+
+            <!-- Bottom Control Panel -->
+            <div class="bottom-bar">
+                <div class="user-profile">
+                    <div class="avatar-box">
+                        SQ
+                        <div class="status-dot"></div>
+                    </div>
+                    <div class="user-details">
+                        <div class="username">Hello, SQ|SKROPE <span class="badge-whitelisted">Whitelisted</span></div>
+                        <div class="user-status"><i class="fa-solid fa-signal"></i> Server connected...</div>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button class="icon-btn" id="btn-info" title="Information"><i class="fa-solid fa-info"></i></button>
+                    <button class="icon-btn" id="btn-edit" title="Edit Profile"><i class="fa-solid fa-pen"></i></button>
+                    <button class="icon-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
+                    <button class="icon-btn" id="btn-menu" title="Menu"><i class="fa-solid fa-list"></i></button>
+                </div>
+
+                <div class="launch-wrapper">
+                    <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game</button>
+                    <button class="btn-dropdown-toggle" id="btn-toggle-dropdown"><i class="fa-solid fa-chevron-up"></i></button>
+                    
+                    <div class="launch-dropdown" id="launch-dropdown-menu">
+                        <div class="dropdown-item" onclick="openGameFolder()"><i class="fa-regular fa-folder-open"></i> Open Game Folder</div>
+                        <div class="dropdown-item" onclick="verifyGameFiles()"><i class="fa-solid fa-shield-halved"></i> Verify Game Files</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Panel (Patch Notes Only) -->
+        <div class="sidebar-panel">
+            <div class="panel-header-title">
+                <i class="fa-solid fa-newspaper"></i> PATCH NOTES
+            </div>
+
+            <div class="panel-body" id="panel-content">
+                <!-- Loaded dynamically from GitHub patch_notes.json -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="modal-info">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-circle-info" style="color: var(--accent-green);"></i> Information</div>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeModal('modal-info')"></i>
+            </div>
+            <p style="font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 8px;">Thank you for playing GO:COUNTER!</p>
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+                Our launcher is optimized and tweaked to boost game performance, ensuring faster CS:GO load times specially tailored for older PCs with HDDs and legacy graphics cards.
+            </p>
+            <div style="border-top: 1px solid var(--panel-border); padding-top: 12px;">
+                <div class="form-label">Credits & Development</div>
+                <div class="credit-badge">Special Thanks: <span>Lukasss895, AyoVajjo</span></div>
+                <div class="credit-badge">Coded Launcher: <span>Lukasss895</span></div>
+                <div class="credit-badge">Owner: <span>Lukasss895</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="modal-settings">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fa-solid fa-gear" style="color: var(--accent-green);"></i> Launcher Settings</div>
+                <i class="fa-solid fa-xmark modal-close" onclick="closeModal('modal-settings')"></i>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Launch Options</label>
+                <input type="text" class="form-input" id="launch-options-input" value="-novid -tickrate 128 +fps_max 0 -high -nojoy">
+            </div>
+            <div class="form-group">
+                <button class="btn-sec" onclick="addToSteam()"><i class="fa-brands fa-steam"></i> Add Non-Steam Game to Steam</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Modal Control
+    document.getElementById('btn-info').onclick = () => document.getElementById('modal-info').classList.add('active');
+    document.getElementById('btn-settings').onclick = () => document.getElementById('modal-settings').classList.add('active');
+    
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    // Dropdown Control
+    const dropdownBtn = document.getElementById('btn-toggle-dropdown');
+    const dropdownMenu = document.getElementById('launch-dropdown-menu');
+    dropdownBtn.onclick = (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('active');
+    };
+    document.onclick = () => dropdownMenu.classList.remove('active');
+
+    // GitHub Patch Notes Remote Loader
+    async function loadPatchNotes() {
+        const content = document.getElementById('panel-content');
+        content.innerHTML = '<div style="color: var(--text-muted); font-size: 12px; text-align: center; padding-top: 20px;"><i class="fa-solid fa-spinner fa-spin"></i> Loading patch notes...</div>';
+
+        try {
+            const res = await fetch('https://raw.githubusercontent.com/lukasss895/GO-COUNTER-Launcher/main/patch_notes.json');
+            
+            if (!res.ok) throw new Error('Failed to fetch patch notes');
+            
+            const data = await res.json();
+            
+            content.innerHTML = data.map(item => `
+                <div class="patch-card">
+                    <div class="patch-header">
+                        <span class="patch-version">${item.version}</span>
+                        <span class="patch-date">${item.date}</span>
+                    </div>
+                    <div class="patch-title">${item.title}</div>
+                    <ul class="patch-list">
+                        ${item.changes.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        } catch (e) {
+            content.innerHTML = `
+                <div style="color: #e53e3e; font-size: 11px; text-align: center; padding-top: 20px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Could not load patch notes from GitHub.
+                </div>
+            `;
+        }
+    }
+
+    // Launcher Actions
+    function openGameFolder() { alert("C# Command: Opening Game Directory..."); }
+    function verifyGameFiles() { alert("C# Command: Verifying CS:GO Integrity..."); }
+    function addToSteam() { alert("C# Command: Shortcut added to Steam!"); }
+
+    // Init Load
+    loadPatchNotes();
+</script>
+</body>
+</html>
