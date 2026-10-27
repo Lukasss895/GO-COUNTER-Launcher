@@ -53,6 +53,11 @@
         .modal-blur {
             backdrop-filter: blur(8px);
         }
+
+        /* Authentic CS:GO style text glow */
+        .csgo-logo-glow {
+            text-shadow: 0 0 20px rgba(234, 179, 8, 0.4), 0 2px 4px rgba(0,0,0,0.8);
+        }
     </style>
 </head>
 <body class="h-screen w-screen overflow-hidden flex items-center justify-center p-2 sm:p-6 bg-slate-950">
@@ -79,28 +84,44 @@
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex overflow-hidden relative">
             
-            <!-- LEFT MAIN HERO SECTION -->
-            <div class="flex-1 flex flex-col justify-between p-6 relative bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(18, 19, 24, 0.95) 0%, rgba(18, 19, 24, 0.4) 50%, rgba(18, 19, 24, 0.7) 100%), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop');">
+            <!-- LEFT MAIN HERO SECTION WITH CS:GO POLIZEI BACKGROUND -->
+            <div class="flex-1 flex flex-col justify-between p-6 relative bg-cover bg-center" style="background-image: linear-gradient(to top, rgba(11, 12, 16, 0.95) 0%, rgba(11, 12, 16, 0.45) 50%, rgba(11, 12, 16, 0.75) 100%), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop');">
                 
-                <!-- TOP BANNER INFO -->
-                <div class="flex justify-between items-start">
-                    <div>
-                        <span class="bg-[#74C044]/20 border border-[#74C044]/40 text-[#74C044] text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                            <i class="fa-solid fa-shield-halved mr-1"></i> Anti-Cheat Active
+                <!-- BACKGROUND IMAGE OVERLAY WITH EXACT SPECIFIED ARTWORK -->
+                <div class="absolute inset-0 bg-cover bg-center mix-blend-lighten opacity-90 pointer-events-none" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop'); background-blend-mode: overlay;"></div>
+
+                <!-- TOP BANNER INFO & AUTHENTIC GO:COUNTER CS:GO STYLE LOGO -->
+                <div class="relative z-10 flex flex-col items-start space-y-3">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-[#74C044]/20 border border-[#74C044]/40 text-[#74C044] text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved"></i> Anti-Cheat Active
                         </span>
-                        <h1 class="text-3xl font-rajdhani font-bold text-white tracking-wide mt-2 drop-shadow-md">CS:GO 2016 LEGACY PROJECT</h1>
-                        <p class="text-xs text-slate-300 max-w-md mt-1">Ultra-optimized client with legacy audio bank, RAM purge engine & silent inventory bridge.</p>
+                        <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-xs text-slate-300 backdrop-blur-md">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>API Server: <strong class="text-emerald-400">Online</strong></span>
+                        </div>
                     </div>
 
-                    <!-- REFRESH GITHUB STATUS -->
-                    <div class="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-800 text-xs text-slate-300">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>API Server: <strong class="text-emerald-400">Online</strong></span>
+                    <!-- CUSTOM CS:GO STYLE BRAND LOGO (GO:COUNTER) -->
+                    <div class="pt-2 select-none">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-rajdhani font-black text-4xl sm:text-5xl tracking-widest text-amber-500 uppercase csgo-logo-glow">GO:<span class="text-white">COUNTER</span></span>
+                            <!-- Yellow CS:GO Soldier Silhouette Icon -->
+                            <div class="flex items-center justify-center text-amber-500 text-3xl sm:text-4xl px-1">
+                                <i class="fa-solid fa-[#74C044] fa-person-rifle drop-shadow-[0_0_10px_rgba(234,179,8,0.6)]"></i>
+                            </div>
+                        </div>
+                        <div class="text-[11px] font-bold tracking-[0.35em] text-amber-400/90 uppercase -mt-1 drop-shadow">
+                            LEGACY 2016 CLIENT EDITION
+                        </div>
+                        <p class="text-xs text-slate-300 max-w-md mt-2 drop-shadow bg-slate-950/40 p-2 rounded border border-slate-800/40 backdrop-blur-sm">
+                            Ultra-optimized client with legacy audio bank, RAM purge engine & silent inventory bridge.
+                        </p>
                     </div>
                 </div>
 
                 <!-- BOTTOM CONTROL BAR -->
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 glass-panel p-3.5 rounded-xl border border-slate-700/50 shadow-2xl">
+                <div class="relative z-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 glass-panel p-3.5 rounded-xl border border-slate-700/50 shadow-2xl">
                     
                     <!-- USER PROFILE -->
                     <div class="flex items-center space-x-3">
@@ -124,13 +145,13 @@
                         
                         <!-- TOOLBAR BUTTONS -->
                         <div class="flex items-center bg-slate-900/90 rounded-lg p-1 border border-slate-700/60">
-                            <button title="Informácie" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
+                            <button onclick="openInfoModal()" title="Information" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
                                 <i class="fa-solid fa-circle-info text-sm"></i>
                             </button>
                             <button title="Server Browser" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
-                                <i class="fa-solid fa-[#74C044] fa-list-ul text-sm"></i>
+                                <i class="fa-solid fa-list-ul text-sm"></i>
                             </button>
-                            <button onclick="openSettingsModal()" title="Nastavenia" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
+                            <button onclick="openSettingsModal()" title="Settings" class="w-9 h-9 rounded text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition">
                                 <i class="fa-solid fa-gear text-sm"></i>
                             </button>
                         </div>
@@ -251,45 +272,61 @@
                 </button>
             </div>
 
+    <!-- INFORMATION MODAL -->
+    <div id="infoModal" class="hidden fixed inset-0 modal-blur bg-black/75 z-50 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-[#181922] border border-slate-700 rounded-xl shadow-2xl p-6 relative">
+            
+            <div class="flex justify-between items-center pb-3 border-b border-slate-800">
+                <h3 class="text-lg font-rajdhani font-bold text-white tracking-wide flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-[#74C044]"></i> ABOUT GO:COUNTER
+                </h3>
+                <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
             <div class="py-4 space-y-4 text-xs">
                 
-                <!-- LAUNCH OPTIONS -->
-                <div>
-                    <label class="block font-semibold text-slate-300 mb-1.5">Custom Launch Options (Arguments)</label>
-                    <input type="text" id="launchOptionsInput" value="-game csgo -insecure -high -threads 12 -lowmem -nojoy +fps_max 288" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-[#74C044] font-mono text-[11px]">
-                    <p class="text-[10px] text-slate-500 mt-1">Tieto argumenty sa automaticky priradia k spúšťaciemu príkazu csgo.exe.</p>
+                <!-- GRATITUDE BANNER -->
+                <div class="p-3 bg-[#74C044]/10 border border-[#74C044]/30 rounded-lg text-center">
+                    <p class="font-rajdhani font-bold text-base text-[#74C044] tracking-wide">
+                        Thank you for playing GO:COUNTER!
+                    </p>
                 </div>
 
-                <!-- ADD TO STEAM BUTTON -->
-                <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 flex items-center justify-between">
-                    <div>
-                        <div class="font-semibold text-slate-200 flex items-center gap-1.5">
-                            <i class="fa-brands fa-steam text-slate-400 text-sm"></i> Add to Steam Library
-                        </div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">Pridá GO:COUNTER ako Non-Steam hru do tvojho Steamu.</div>
-                    </div>
-                    <button onclick="addToSteam()" class="bg-slate-800 hover:bg-[#74C044] hover:text-slate-950 text-slate-200 font-semibold px-3 py-1.5 rounded border border-slate-700 transition">
-                        Add to Steam
-                    </button>
+                <!-- OPTIMIZATION DETAILS -->
+                <div class="p-3 bg-slate-900/80 rounded-lg border border-slate-800 text-slate-300 leading-relaxed text-[11px]">
+                    <i class="fa-solid fa-bolt text-amber-400 mr-1"></i>
+                    Our launcher is fully optimized and tweaked to enhance game performance, boost FPS, and significantly accelerate loading times—specially tailored for older PCs with legacy GPUs and traditional HDD storage.
                 </div>
 
-                <!-- AUTOMATIC RAM & SERVICES PURGE -->
-                <div class="flex items-center justify-between p-3 bg-slate-900/80 rounded-lg border border-slate-800">
-                    <div>
-                        <div class="font-semibold text-slate-200">Auto RAM Purge & High Priority</div>
-                        <div class="text-[10px] text-slate-400">Automaticky vyčistí pamäť pri štarte a uzamkne proces na HIGH.</div>
+                <!-- CREDITS SECTION -->
+                <div class="p-3.5 bg-slate-900/90 rounded-lg border border-slate-800 space-y-2">
+                    <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5 pb-1 border-b border-slate-800">
+                        <i class="fa-solid fa-heart text-red-400 text-xs"></i> Special Thanks & Credits
                     </div>
-                    <input type="checkbox" checked class="w-4 h-4 accent-[#74C044] rounded">
+                    
+                    <div class="flex items-center justify-between text-slate-200 text-xs">
+                        <span class="text-slate-400">Special Thanks:</span>
+                        <span class="font-semibold text-[#74C044]">Lukasss895 & AyoVajjo</span>
+                    </div>
+
+                    <div class="flex items-center justify-between text-slate-200 text-xs">
+                        <span class="text-slate-400">Launcher Coder:</span>
+                        <span class="font-semibold text-slate-100 font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700">Lukasss895</span>
+                    </div>
+
+                    <div class="flex items-center justify-between text-slate-200 text-xs">
+                        <span class="text-slate-400">Owner & Founder:</span>
+                        <span class="font-semibold text-amber-400 font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700">Lukasss895</span>
+                    </div>
                 </div>
 
             </div>
 
-            <div class="pt-4 border-t border-slate-800 flex justify-end gap-2">
-                <button onclick="closeSettingsModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition">
-                    Close
-                </button>
-                <button onclick="saveSettings()" class="px-4 py-2 btn-green text-slate-950 font-semibold rounded-lg text-xs transition">
-                    Save Changes
+            <div class="pt-3 border-t border-slate-800 flex justify-end">
+                <button onclick="closeInfoModal()" class="px-5 py-2 btn-green text-slate-950 font-bold rounded-lg text-xs transition">
+                    Got it!
                 </button>
             </div>
 
@@ -466,6 +503,14 @@ public async Task&lt;string&gt; FetchPatchNotesFromGitHub()
         function saveSettings() {
             closeSettingsModal();
             showToast("Settings updated successfully!");
+        }
+
+        function openInfoModal() {
+            document.getElementById('infoModal').classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('infoModal').classList.add('hidden');
         }
 
         function toggleCSCodeModal() {
