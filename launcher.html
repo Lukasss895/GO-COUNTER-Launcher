@@ -111,7 +111,7 @@
         .hero-banner {
             flex: 1.6;
             position: relative;
-            background: url('https://i.imgur.com/G5g2mJ4.jpg') center/cover no-repeat;
+            background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -122,7 +122,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(11, 13, 18, 0.9) 0%, rgba(11, 13, 18, 0.2) 50%, rgba(11, 13, 18, 0.4) 100%);
+            background: linear-gradient(0deg, rgba(11, 13, 18, 0.95) 0%, rgba(11, 13, 18, 0.3) 50%, rgba(11, 13, 18, 0.5) 100%);
             z-index: 1;
         }
 
@@ -133,71 +133,48 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(15, 18, 24, 0.85);
+            background: rgba(15, 18, 24, 0.9);
             backdrop-filter: blur(10px);
-            padding: 12px 18px;
+            padding: 14px 18px;
             border-radius: 8px;
             border: 1px solid var(--panel-border);
         }
 
-        .user-profile {
+        /* Server Status Indicator */
+        .server-status-box {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .avatar-box {
-            width: 42px;
-            height: 42px;
-            background: #1e2633;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            color: #f5ae00;
-            border: 1px solid rgba(245, 174, 0, 0.3);
-            position: relative;
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent-green);
+        .server-dot {
+            width: 10px;
+            height: 10px;
+            background: #e53e3e; /* Red when not selected */
             border-radius: 50%;
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            border: 2px solid #0f1218;
+            box-shadow: 0 0 8px rgba(229, 62, 62, 0.5);
+            transition: all 0.3s;
         }
 
-        .user-details {
+        .server-dot.connected {
+            background: var(--accent-green);
+            box-shadow: 0 0 8px rgba(131, 184, 43, 0.5);
+        }
+
+        .server-info {
             display: flex;
             flex-direction: column;
         }
 
-        .username {
-            font-size: 14px;
+        .server-title {
+            font-size: 13px;
             font-weight: 700;
             color: #fff;
         }
 
-        .user-status {
+        .server-subtitle {
             font-size: 11px;
-            color: var(--accent-green);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .badge-whitelisted {
-            background: rgba(131, 184, 43, 0.15);
-            color: var(--accent-green);
-            font-size: 9px;
-            padding: 1px 5px;
-            border-radius: 3px;
-            border: 1px solid rgba(131, 184, 43, 0.3);
-            margin-left: 6px;
+            color: var(--text-muted);
         }
 
         /* Action Icon Group */
@@ -498,7 +475,6 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
-        /* Credits Badges */
         .credit-badge {
             display: inline-flex;
             align-items: center;
@@ -541,14 +517,11 @@
 
             <!-- Bottom Control Panel -->
             <div class="bottom-bar">
-                <div class="user-profile">
-                    <div class="avatar-box">
-                        SQ
-                        <div class="status-dot"></div>
-                    </div>
-                    <div class="user-details">
-                        <div class="username">Hello, SQ|SKROPE <span class="badge-whitelisted">Whitelisted</span></div>
-                        <div class="user-status"><i class="fa-solid fa-signal"></i> Server connected...</div>
+                <div class="server-status-box">
+                    <div class="server-dot" id="server-status-dot"></div>
+                    <div class="server-info">
+                        <div class="server-title" id="server-title-text">No Server Selected</div>
+                        <div class="server-subtitle" id="server-sub-text">Please choose a matchmaking node</div>
                     </div>
                 </div>
 
@@ -638,6 +611,25 @@
         dropdownMenu.classList.toggle('active');
     };
     document.onclick = () => dropdownMenu.classList.remove('active');
+
+    // Simulate Server Connection State (Can be hooked to C# bridge later)
+    function setServerStatus(connected, serverName = "") {
+        const dot = document.getElementById('server-status-dot');
+        const title = document.getElementById('server-title-text');
+        const sub = document.getElementById('server-sub-text');
+        
+        if(connected) {
+            dot.classList.add('connected');
+            title.textContent = serverName;
+            sub.textContent = "Server connected";
+        } else {
+            dot.classList.remove('connected');
+            title.textContent = "No Server Selected";
+            sub.textContent = "Please choose a matchmaking node";
+        }
+    }
+    // Test state (Change to true when server is selected)
+    setServerStatus(false);
 
     // GitHub Patch Notes Remote Loader
     async function loadPatchNotes() {
