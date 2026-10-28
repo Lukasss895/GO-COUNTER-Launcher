@@ -107,11 +107,11 @@
             position: relative;
         }
 
-        /* Left Banner Section with Wallpaper */
+        /* Left Banner Section with New Artwork Background */
         .hero-banner {
             flex: 1.6;
             position: relative;
-            background: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
+            background: gocr.webp
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -122,7 +122,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(0deg, rgba(11, 13, 18, 0.95) 0%, rgba(11, 13, 18, 0.3) 50%, rgba(11, 13, 18, 0.5) 100%);
+            background: linear-gradient(0deg, rgba(11, 13, 18, 0.95) 0%, rgba(11, 13, 18, 0.1) 45%, rgba(11, 13, 18, 0.4) 100%);
             z-index: 1;
         }
 
@@ -612,7 +612,7 @@
     };
     document.onclick = () => dropdownMenu.classList.remove('active');
 
-    // Simulate Server Connection State (Can be hooked to C# bridge later)
+    // Server Status Indicator
     function setServerStatus(connected, serverName = "") {
         const dot = document.getElementById('server-status-dot');
         const title = document.getElementById('server-title-text');
@@ -628,7 +628,6 @@
             sub.textContent = "Please choose a matchmaking node";
         }
     }
-    // Test state (Change to true when server is selected)
     setServerStatus(false);
 
     // GitHub Patch Notes Remote Loader
