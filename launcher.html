@@ -107,11 +107,14 @@
             position: relative;
         }
 
-        /* Left Banner Section with New Artwork Background */
+        /* Left Banner Section with Centered Artwork Background */
         .hero-banner {
             flex: 1.6;
             position: relative;
             background-image: url('gocr.webp');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -150,7 +153,7 @@
         .server-dot {
             width: 10px;
             height: 10px;
-            background: #e53e3e; /* Red when not selected */
+            background: #e53e3e;
             border-radius: 50%;
             box-shadow: 0 0 8px rgba(229, 62, 62, 0.5);
             transition: all 0.3s;
