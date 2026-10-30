@@ -166,7 +166,6 @@
             color: var(--text-muted);
         }
 
-        /* Skupina akčných tlačidiel presunutá bližšie k Launch bloku */
         .action-group {
             display: flex;
             align-items: center;
@@ -175,7 +174,6 @@
             margin-right: 10px;
         }
 
-        /* Zväčšené, guľaté ikonkové tlačidlá */
         .icon-btn {
             width: 36px;
             height: 36px;
@@ -365,21 +363,27 @@
             left: 0;
         }
 
+        /* Modal Overlay s plynulým stmievaním pozadia */
         .modal-overlay {
             position: absolute;
             inset: 0;
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(5px);
             z-index: 200;
-            display: none;
+            display: flex;
             align-items: center;
             justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
         }
 
         .modal-overlay.active {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
         }
 
+        /* Modal Box s animáciou vytiahnutia a zväčšenia */
         .modal-box {
             background: var(--modal-bg);
             border: 1px solid var(--panel-border);
@@ -387,6 +391,12 @@
             width: 440px;
             padding: 20px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0) scale(1);
         }
 
         .modal-header {
@@ -411,6 +421,7 @@
             color: var(--text-muted);
             cursor: pointer;
             font-size: 16px;
+            transition: color 0.2s;
         }
 
         .modal-close:hover {
@@ -515,7 +526,6 @@
                     </div>
                 </div>
 
-                <!-- Guľaté zväčšené tlačidlá posunuté k Launch tlačidlu -->
                 <div class="action-group">
                     <button class="icon-btn" id="btn-info" title="Information"><i class="fa-solid fa-info"></i></button>
                     <button class="icon-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
@@ -584,13 +594,22 @@
 </div>
 
 <script>
-    // Modal Control
+    // Modal Control s animáciou
     document.getElementById('btn-info').onclick = () => document.getElementById('modal-info').classList.add('active');
     document.getElementById('btn-settings').onclick = () => document.getElementById('modal-settings').classList.add('active');
     
     function closeModal(id) {
         document.getElementById(id).classList.remove('active');
     }
+
+    // Kliknutie mimo okna zatvorí modal s animáciou
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.remove('active');
+            }
+        });
+    });
 
     // Dropdown Control
     const dropdownBtn = document.getElementById('btn-toggle-dropdown');
