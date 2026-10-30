@@ -2,9 +2,8 @@
   {
     "version": "v1.1",
     "date": "27. 10. 2026",
-    "title": "Legacy Audio & Inventory",
+    "title": "Inventory Fix",
     "changes": [
-      "Added 2016 Legacy Sound Pack for weapons and environment",
       "Drops Rewards fully compiled without requiring local Python",
       "Automated RAM memory cleanup for older PCs"
     ]
