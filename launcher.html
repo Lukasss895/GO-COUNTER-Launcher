@@ -124,9 +124,10 @@
             align-items: center;
             background: rgba(15, 18, 24, 0.9);
             backdrop-filter: blur(10px);
-            padding: 14px 18px;
+            padding: 10px 14px;
             border-radius: 8px;
             border: 1px solid var(--panel-border);
+            gap: 10px;
         }
 
         .server-status-box {
@@ -172,8 +173,8 @@
         }
 
         .icon-btn {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--panel-border);
             border-radius: 6px;
@@ -183,6 +184,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 12px;
         }
 
         .icon-btn:hover {
@@ -195,22 +197,24 @@
             position: relative;
         }
 
+        /* Opravené a zmenšené Launch tlačidlo */
         .btn-launch {
             background: var(--accent-green);
             color: #0d1403;
             border: none;
-            padding: 0 24px;
-            height: 42px;
+            padding: 0 16px;
+            height: 36px;
             border-top-left-radius: 6px;
             border-bottom-left-radius: 6px;
-            font-weight: 800;
-            font-size: 15px;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.3px;
             cursor: pointer;
             transition: background 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            white-space: nowrap;
         }
 
         .btn-launch:hover {
@@ -222,8 +226,8 @@
             color: #0d1403;
             border: none;
             border-left: 1px solid rgba(0, 0, 0, 0.15);
-            width: 34px;
-            height: 42px;
+            width: 28px;
+            height: 36px;
             border-top-right-radius: 6px;
             border-bottom-right-radius: 6px;
             cursor: pointer;
@@ -231,6 +235,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            font-size: 11px;
         }
 
         .btn-dropdown-toggle:hover {
@@ -239,12 +244,12 @@
 
         .launch-dropdown {
             position: absolute;
-            bottom: 48px;
+            bottom: 42px;
             right: 0;
             background: #171c24;
             border: 1px solid var(--panel-border);
             border-radius: 6px;
-            width: 180px;
+            width: 170px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             display: none;
             flex-direction: column;
@@ -257,12 +262,12 @@
         }
 
         .dropdown-item {
-            padding: 10px 14px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 11px;
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             cursor: pointer;
             transition: background 0.2s;
         }
@@ -501,8 +506,9 @@
                 <div class="server-status-box">
                     <div class="server-dot connected" id="server-status-dot"></div>
                     <div class="server-info">
-                        <div class="server-title" id="server-title-text">GO:COUNTER Node Active</div>
-                        <div class="server-subtitle" id="server-sub-text">Database & Sync Ready</div>
+                        <!-- Zmenené na zobrazenie uvítačky zo Steamu -->
+                        <div class="server-title" id="user-welcome-text">Welcome, Player</div>
+                        <div class="server-subtitle" id="server-sub-text">Ready to Play</div>
                     </div>
                 </div>
 
@@ -514,7 +520,8 @@
                 </div>
 
                 <div class="launch-wrapper">
-                    <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game & Sync</button>
+                    <!-- Zmenšené a premenované tlačidlo -->
+                    <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game</button>
                     <button class="btn-dropdown-toggle" id="btn-toggle-dropdown"><i class="fa-solid fa-chevron-up"></i></button>
                     
                     <div class="launch-dropdown" id="launch-dropdown-menu">
@@ -593,10 +600,34 @@
     };
     document.onclick = () => dropdownMenu.classList.remove('active');
 
+    // Funkcia na zistenie mena zo Steamu
+    function loadSteamUsername() {
+        const userTitle = document.getElementById('user-welcome-text');
+        
+        // Ak launcher beží v C# / Electron obale, môže predávať meno cez window variable:
+        if (window.steamUser && window.steamUser.name) {
+            userTitle.textContent = "Welcome, " + window.steamUser.name;
+            return;
+        }
+
+        // Pokus o načítanie z LocalStorage (ak si ho launcher predtým uložil)
+        const savedName = localStorage.getItem('steam_username');
+        if (savedName) {
+            userTitle.textContent = "Welcome, " + savedName;
+        } else {
+            // Predvolené meno ak sa nezistí priamo
+            userTitle.textContent = "Welcome, Player";
+        }
+    }
+
     // Main Launch Button Logic
     document.getElementById('btn-main-launch').onclick = () => {
-        alert("GO:COUNTER: Spúšťa sa hra a prebieha overenie inventárnych dropov z databázy!");
-        // Sem môžeš dopripojiť spustenie python skriptu cez lokálny backend/C# wrapper, ak launcher beží v C#
+        if (window.chrome && window.chrome.webview) {
+            // Správa pre C# WPF Launcher
+            window.chrome.webview.postMessage("LAUNCH_GAME");
+        } else {
+            alert("Spúšťa sa CS:GO...");
+        }
     };
 
     // GitHub Patch Notes Remote Loader
@@ -630,10 +661,12 @@
         }
     }
 
-    function openGameFolder() { alert("C# Command: Opening Game Directory..."); }
-    function verifyGameFiles() { alert("C# Command: Verifying CS:GO Integrity..."); }
-    function addToSteam() { alert("C# Command: Shortcut added to Steam!"); }
+    function openGameFolder() { alert("Opening Game Directory..."); }
+    function verifyGameFiles() { alert("Verifying CS:GO Integrity..."); }
+    function addToSteam() { alert("Shortcut added to Steam!"); }
 
+    // Init
+    loadSteamUsername();
     loadPatchNotes();
 </script>
 </body>
