@@ -98,7 +98,7 @@
         .hero-banner {
             flex: 1.6;
             position: relative;
-            background-image: url('csgo.jpg');
+            background-image: url('gocr.jpg');
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
@@ -166,30 +166,35 @@
             color: var(--text-muted);
         }
 
+        /* Skupina akčných tlačidiel presunutá bližšie k Launch bloku */
         .action-group {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            margin-left: auto;
+            margin-right: 10px;
         }
 
+        /* Zväčšené, guľaté ikonkové tlačidlá */
         .icon-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--panel-border);
-            border-radius: 6px;
+            border-radius: 50%;
             color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.15);
             color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .launch-wrapper {
@@ -510,7 +515,7 @@
                     </div>
                 </div>
 
-                <!-- Odstránené nepotrebné ikonky (ceruzka a menu) -->
+                <!-- Guľaté zväčšené tlačidlá posunuté k Launch tlačidlu -->
                 <div class="action-group">
                     <button class="icon-btn" id="btn-info" title="Information"><i class="fa-solid fa-info"></i></button>
                     <button class="icon-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
