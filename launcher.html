@@ -197,7 +197,6 @@
             position: relative;
         }
 
-        /* Opravené a zmenšené Launch tlačidlo */
         .btn-launch {
             background: var(--accent-green);
             color: #0d1403;
@@ -506,21 +505,18 @@
                 <div class="server-status-box">
                     <div class="server-dot connected" id="server-status-dot"></div>
                     <div class="server-info">
-                        <!-- Zmenené na zobrazenie uvítačky zo Steamu -->
                         <div class="server-title" id="user-welcome-text">Welcome, Player</div>
                         <div class="server-subtitle" id="server-sub-text">Ready to Play</div>
                     </div>
                 </div>
 
+                <!-- Odstránené nepotrebné ikonky (ceruzka a menu) -->
                 <div class="action-group">
                     <button class="icon-btn" id="btn-info" title="Information"><i class="fa-solid fa-info"></i></button>
-                    <button class="icon-btn" id="btn-edit" title="Edit Profile"><i class="fa-solid fa-pen"></i></button>
                     <button class="icon-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
-                    <button class="icon-btn" id="btn-menu" title="Menu"><i class="fa-solid fa-list"></i></button>
                 </div>
 
                 <div class="launch-wrapper">
-                    <!-- Zmenšené a premenované tlačidlo -->
                     <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game</button>
                     <button class="btn-dropdown-toggle" id="btn-toggle-dropdown"><i class="fa-solid fa-chevron-up"></i></button>
                     
@@ -604,18 +600,15 @@
     function loadSteamUsername() {
         const userTitle = document.getElementById('user-welcome-text');
         
-        // Ak launcher beží v C# / Electron obale, môže predávať meno cez window variable:
         if (window.steamUser && window.steamUser.name) {
             userTitle.textContent = "Welcome, " + window.steamUser.name;
             return;
         }
 
-        // Pokus o načítanie z LocalStorage (ak si ho launcher predtým uložil)
         const savedName = localStorage.getItem('steam_username');
         if (savedName) {
             userTitle.textContent = "Welcome, " + savedName;
         } else {
-            // Predvolené meno ak sa nezistí priamo
             userTitle.textContent = "Welcome, Player";
         }
     }
@@ -623,7 +616,6 @@
     // Main Launch Button Logic
     document.getElementById('btn-main-launch').onclick = () => {
         if (window.chrome && window.chrome.webview) {
-            // Správa pre C# WPF Launcher
             window.chrome.webview.postMessage("LAUNCH_GAME");
         } else {
             alert("Spúšťa sa CS:GO...");
