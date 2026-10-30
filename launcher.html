@@ -35,7 +35,6 @@
             overflow: hidden;
         }
 
-        /* Launcher Container */
         .launcher-card {
             width: 1000px;
             height: 600px;
@@ -49,7 +48,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        /* Top Header */
         .top-bar {
             height: 45px;
             background: rgba(11, 13, 18, 0.95);
@@ -74,15 +72,6 @@
             color: #f5ae00;
         }
 
-        .badge-edition {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 10px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
         .top-controls {
             display: flex;
             gap: 12px;
@@ -100,14 +89,12 @@
             color: #fff;
         }
 
-        /* Main Workspace */
         .main-content {
             display: flex;
             flex: 1;
             position: relative;
         }
 
-        /* Left Banner Section perfectly fitted */
         .hero-banner {
             flex: 1.6;
             position: relative;
@@ -129,7 +116,6 @@
             z-index: 1;
         }
 
-        /* Bottom Control Panel */
         .bottom-bar {
             position: relative;
             z-index: 2;
@@ -143,7 +129,6 @@
             border: 1px solid var(--panel-border);
         }
 
-        /* Server Status Indicator */
         .server-status-box {
             display: flex;
             align-items: center;
@@ -180,7 +165,6 @@
             color: var(--text-muted);
         }
 
-        /* Action Icon Group */
         .action-group {
             display: flex;
             align-items: center;
@@ -206,7 +190,6 @@
             color: #fff;
         }
 
-        /* Combined Launch Button */
         .launch-wrapper {
             display: flex;
             position: relative;
@@ -254,7 +237,6 @@
             background: var(--accent-green-hover);
         }
 
-        /* Dropdown Menu */
         .launch-dropdown {
             position: absolute;
             bottom: 48px;
@@ -290,7 +272,6 @@
             color: #fff;
         }
 
-        /* Right Panel (Patch Notes Only) */
         .sidebar-panel {
             flex: 1;
             background: rgba(15, 18, 24, 0.95);
@@ -322,7 +303,6 @@
             overflow-y: auto;
         }
 
-        /* Patch Notes Styling */
         .patch-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--panel-border);
@@ -376,7 +356,6 @@
             left: 0;
         }
 
-        /* Modals */
         .modal-overlay {
             position: absolute;
             inset: 0;
@@ -520,10 +499,10 @@
             <!-- Bottom Control Panel -->
             <div class="bottom-bar">
                 <div class="server-status-box">
-                    <div class="server-dot" id="server-status-dot"></div>
+                    <div class="server-dot connected" id="server-status-dot"></div>
                     <div class="server-info">
-                        <div class="server-title" id="server-title-text">No Server Selected</div>
-                        <div class="server-subtitle" id="server-sub-text">Please choose a matchmaking node</div>
+                        <div class="server-title" id="server-title-text">GO:COUNTER Node Active</div>
+                        <div class="server-subtitle" id="server-sub-text">Database & Sync Ready</div>
                     </div>
                 </div>
 
@@ -535,7 +514,7 @@
                 </div>
 
                 <div class="launch-wrapper">
-                    <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game</button>
+                    <button class="btn-launch" id="btn-main-launch"><i class="fa-solid fa-play"></i> Launch Game & Sync</button>
                     <button class="btn-dropdown-toggle" id="btn-toggle-dropdown"><i class="fa-solid fa-chevron-up"></i></button>
                     
                     <div class="launch-dropdown" id="launch-dropdown-menu">
@@ -614,23 +593,11 @@
     };
     document.onclick = () => dropdownMenu.classList.remove('active');
 
-    // Server Status Indicator
-    function setServerStatus(connected, serverName = "") {
-        const dot = document.getElementById('server-status-dot');
-        const title = document.getElementById('server-title-text');
-        const sub = document.getElementById('server-sub-text');
-        
-        if(connected) {
-            dot.classList.add('connected');
-            title.textContent = serverName;
-            sub.textContent = "Server connected";
-        } else {
-            dot.classList.remove('connected');
-            title.textContent = "No Server Selected";
-            sub.textContent = "Please choose a matchmaking node";
-        }
-    }
-    setServerStatus(false);
+    // Main Launch Button Logic
+    document.getElementById('btn-main-launch').onclick = () => {
+        alert("GO:COUNTER: Spúšťa sa hra a prebieha overenie inventárnych dropov z databázy!");
+        // Sem môžeš dopripojiť spustenie python skriptu cez lokálny backend/C# wrapper, ak launcher beží v C#
+    };
 
     // GitHub Patch Notes Remote Loader
     async function loadPatchNotes() {
@@ -639,9 +606,7 @@
 
         try {
             const res = await fetch('https://raw.githubusercontent.com/lukasss895/GO-COUNTER-Launcher/main/patch_notes.json');
-            
             if (!res.ok) throw new Error('Failed to fetch patch notes');
-            
             const data = await res.json();
             
             content.innerHTML = data.map(item => `
@@ -665,12 +630,10 @@
         }
     }
 
-    // Launcher Actions
     function openGameFolder() { alert("C# Command: Opening Game Directory..."); }
     function verifyGameFiles() { alert("C# Command: Verifying CS:GO Integrity..."); }
     function addToSteam() { alert("C# Command: Shortcut added to Steam!"); }
 
-    // Init Load
     loadPatchNotes();
 </script>
 </body>
